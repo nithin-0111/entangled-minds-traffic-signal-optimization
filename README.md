@@ -1,98 +1,80 @@
-# Traffic Signal Optimization Using Deep Q-Learning (DQN) for Vehicle Detection
+# Intelligent Traffic Signal Optimization
 
-This project leverages Deep Q-Learning (DQN) to optimize traffic signal timings based on real-time vehicle detection from video streams. It consists of three separate modules that work together:
+## Overview
 
-- **main.py**: Processes the video feed and detects vehicles in real-time using background subtraction.
-- **training.py**: Trains the Deep Q-Learning model to optimize vehicle detection parameters and traffic signal timings.
-- **accuracy.py**: Evaluates the accuracy of the predictions and visualizes the improvements in optimal time allocation.
+This project aims to improve traffic management by detecting vehicles, optimizing traffic signal timings using a Deep Q-Learning (DQN) model, and evaluating the system's performance. The solution includes three key scripts: `main.py` for vehicle detection and signal control, `accuracy.py` for evaluating performance, and `training.py` for training the DQN model.
 
-## Project Structure
+## File Descriptions
 
-### 1. main.py (Vehicle Detection & Traffic Signal Control)
-- **Goal**: Detects vehicles from video footage and adjusts traffic signal timings dynamically using Q-Learning.
-- **Key Features**:
-  - Background subtraction for vehicle detection.
-  - Vehicle counting at specific positions to adjust traffic signal timings.
-  - Dynamic optimization of thresholds (e.g., vehicle size) based on DQN's actions.
-  - Displays vehicle count and optimal signal timings for each lane.
-- **Inputs**:
-  - Video files (e.g., `video_01.mp4`, `video_02.mp4`).
-- **Outputs**:
-  - Real-time traffic signal color and optimal time adjustments based on the detected vehicle count.
+- **main.py**: Contains the vehicle detection logic using OpenCV. Processes video streams, counts vehicles, and adjusts signal timings using actions from a trained DQN agent.
+- **accuracy.py**: Visualizes the performance of the trained model. Shows optimal time allocation and prediction accuracy for each processed video.
+- **training.py**: Implements the DQN algorithm with a neural network. Trains on vehicle count data and optimizes signal timings by adjusting thresholds. The model is periodically saved during training.
 
-### 2. training.py (Deep Q-Learning Model Training)
-- **Goal**: Trains the Deep Q-Learning model to predict and optimize traffic signal timings.
-- **Key Features**:
-  - DQN setup with a neural network for training and prediction.
-  - Experience replay using memory to train the agent.
-  - Model training with backpropagation to adjust parameters for optimal traffic flow.
-- **Inputs**:
-  - Initial state (e.g., vehicle count) and actions (e.g., threshold adjustments).
-- **Outputs**:
-  - Trained DQN model stored periodically during training for checkpointing.
+## Detailed Script Descriptions
 
-### 3. accuracy.py (Accuracy Evaluation & Visualization)
-- **Goal**: Evaluates and visualizes the accuracy of the traffic signal optimization.
-- **Key Features**:
-  - Plots the optimal time allocation for each video.
-  - Tracks the accuracy of predictions and improvements in time allocation based on the vehicle count.
-  - Visualizes how DQN's actions impact the flow of traffic and overall performance.
-- **Inputs**:
-  - The optimal times and vehicle counts from previous modules.
-- **Outputs**:
-  - Plots showing the accuracy of prediction and improvements in time allocation over videos.
+### main.py
 
-## Requirements
+This script captures video frames, applies background subtraction for vehicle detection, and draws bounding boxes around detected vehicles. It counts vehicles crossing a set line and uses a DQN agent to optimize signal timings based on vehicle counts.
 
-Before running the project, ensure you have the following dependencies installed:
+Key functionalities:
+- Detects vehicles in video frames using OpenCV.
+- Counts vehicles crossing a specified line.
+- Uses a pre-trained DQN model to adjust signal timings.
+- Visualizes vehicle counts and signal timings on video frames.
 
-- Python 3.x
-- OpenCV: `pip install opencv-python`
-- TensorFlow: `pip install tensorflow`
-- NumPy: `pip install numpy`
-- Matplotlib: `pip install matplotlib`
+### accuracy.py
+
+This script evaluates the performance of the traffic signal control system by plotting the optimal time allocation and prediction accuracy.
+
+Key functionalities:
+- Plots optimal signal timings over multiple videos.
+- Displays prediction accuracy of the DQN model.
+- Utilizes Matplotlib for visualization.
+
+### training.py
+
+This script trains a Deep Q-Learning model to optimize traffic signal timings. It processes video files, adjusts signal timings based on vehicle counts, and updates the DQN model.
+
+Key functionalities:
+- Implements DQN with a neural network.
+- Trains the model on simulated traffic scenarios.
+- Periodically saves the trained model.
+- Adjusts signal timings based on learned policies.
+
+## Future Improvements
+
+- **Additional Traffic Scenarios**: Add different types of vehicles or lane configurations to enhance model robustness.
+- **Real-Time Deployment**: Extend the project to work in a real-time traffic control system with live video feeds.
+- **Enhanced Reward System**: Improve the reward function to better simulate real-world traffic flow behavior.
+
+## Acknowledgements
+
+- **OpenCV**: For the computer vision functionality, such as vehicle detection and background subtraction.
+- **TensorFlow**: For implementing the Deep Q-Learning algorithm.
+- **Matplotlib**: For visualizing the accuracy of predictions and optimal time allocation.
 
 ## How to Run
 
-### Vehicle Detection & Signal Control (main.py):
-This script processes each video file in sequence, detects vehicles, adjusts signal timings, and visualizes the results.
+### Vehicle Detection & Signal Control (`main.py`)
+
 Run the script with:
 
 ```bash
 python main.py
+```
+### Accuracy Evaluation & Visualization (accuracy.py)
 
-Accuracy Evaluation & Visualization (accuracy.py):
+Run the script with:
 
-After running the detection script, use this script to evaluate and plot the performance improvements in time allocation and prediction accuracy. Run the script with:
-
+```bash
 python accuracy.py
+```
 
-Model Training (training.py):
+### Model Training (training.py)
 
-Use this script to train the Deep Q-Learning model to optimize the traffic signal timings. The model will be saved periodically. Run the script with:
+Run the script with:
 
+```bash
 python training.py
-
-File Descriptions
-main.py
-
-Contains the vehicle detection logic using OpenCV, processes video streams, counts vehicles, and adjusts signal timings using actions from the trained DQN agent.
-training.py
-
-Implements the DQN algorithm with a neural network to train on vehicle count data and optimize signal timings by adjusting thresholds.
-accuracy.py
-
-Visualizes the performance of the trained model, showing optimal time allocation and prediction accuracy for each video processed.
-Future Improvements
-
-    Additional Traffic Scenarios: Add different types of vehicles or lane configurations.
-    Real-Time Deployment: Extend the project to work in a real-time traffic control system with live video feeds.
-    Enhanced Reward System: Improve the reward function to better simulate real-world traffic flow behavior.
-
-Acknowledgements
-
-    OpenCV: For the computer vision functionality, such as vehicle detection and background subtraction.
-    TensorFlow: For implementing the Deep Q-Learning algorithm.
-    Matplotlib: For visualizing the accuracy of predictions and optimal time allocation.
-
+```
 By following this structure, the three scripts will allow you to detect vehicles, train the DQN model for optimizing traffic signal timings, and visualize the improvements in traffic management.
