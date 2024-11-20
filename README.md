@@ -61,17 +61,17 @@ Run the script with:
 ```bash
 python main.py
 
+Accuracy Evaluation & Visualization (accuracy.py):
+
+After running the detection script, use this script to evaluate and plot the performance improvements in time allocation and prediction accuracy. Run the script with:
+
+python accuracy.py
+
 Model Training (training.py):
 
 Use this script to train the Deep Q-Learning model to optimize the traffic signal timings. The model will be saved periodically. Run the script with:
 
 python training.py
-
-Accuracy Evaluation & Visualization (accuracy.py):
-
-After training and running the detection script, use this script to evaluate and plot the performance improvements in time allocation and prediction accuracy. Run the script with:
-
-python accuracy.py
 
 File Descriptions
 main.py
