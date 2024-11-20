@@ -3,11 +3,10 @@ import numpy as np
 import random
 from collections import deque
 import tensorflow as tf
-import cv2  # Ensure you have OpenCV for video processing
+import cv2
 
-# DQN parameters
-STATE_SIZE = 4  # Example state size
-ACTION_SIZE = 2  # Example action size
+STATE_SIZE = 4
+ACTION_SIZE = 2
 GAMMA = 0.95     
 EPSILON = 1.0    
 EPSILON_MIN = 0.1
@@ -16,7 +15,6 @@ LEARNING_RATE = 0.001
 MEMORY_SIZE = 2000
 BATCH_SIZE = 32
 
-# Define the DQN model
 class DQN:
     def __init__(self):
         self.model = self.create_model()
@@ -49,31 +47,23 @@ class DQN:
             target_f[0][action] = target
             self.model.fit(state, target_f, epochs=1, verbose=0)
 
-# Define the reward calculation function
 def calculate_reward(counters, video_index, action):
-    # Example reward logic
-    if action == 0:  # Increase threshold
-        return -1  # Penalty for taking this action
-    elif action == 1:  # Decrease threshold
-        return 1  # Reward for this action
+    if action == 0:
+        return -1
+    elif action == 1:
+        return 1
+    return counters[video_index] * 0.1
 
-    return counters[video_index] * 0.1  # Reward based on vehicle count
-
-# Create a DQN agent
 agent = DQN()
 memory = deque(maxlen=MEMORY_SIZE)
 
-# Directory for saving training data
-training_dir = "videos"  # Change this to your training folder
+training_dir = "videos"
 os.makedirs(training_dir, exist_ok=True)
 
-# List of video files
-video_files = ['video_05.mp4', 'video_01.mp4', 'video_02.mp4', 'video_03.mp4']  # Example video files
+video_files = ['video_05.mp4', 'video_01.mp4', 'video_02.mp4', 'video_03.mp4']
 
-# Initialize counters for each video
 counters = [0] * len(video_files)
 
-# Vehicle detection loop
 for video_index, video in enumerate(video_files):
     cap = cv2.VideoCapture(video)
     
@@ -82,10 +72,6 @@ for video_index, video in enumerate(video_files):
         if not ret:
             break
         
-        # Your vehicle detection code goes here
-        # (e.g., processing the frame, detecting vehicles, etc.)
-        
-        # Prepare state for DQN
         state = np.array([counters[video_index], 0, 0, 0]).reshape(1, STATE_SIZE)
 
         if random.random() <= EPSILON:
@@ -94,29 +80,22 @@ for video_index, video in enumerate(video_files):
             action_values = agent.predict(state)
             action = np.argmax(action_values[0])
 
-        # Calculate the reward
         reward = calculate_reward(counters, video_index, action)
 
-        # Next state (you may need to adjust this logic)
-        next_state = np.array([counters[video_index], 0, 0, 0]).reshape(1, STATE_SIZE)  # Update based on your state logic
+        next_state = np.array([counters[video_index], 0, 0, 0]).reshape(1, STATE_SIZE)
 
-        # Save experience to memory
         memory.append((state, action, reward, next_state))
 
-        # Train the DQN
         agent.train(memory)
 
-        # Adjust exploration rate
         if EPSILON > EPSILON_MIN:
             EPSILON *= EPSILON_DECAY
 
-        # Save the model periodically
         if len(memory) % 1000 == 0:
             agent.model.save(os.path.join(training_dir, f"dqn_model_{video_index}.h5"))
 
     cap.release()
 
-# Final model save after training
 agent.model.save(os.path.join(training_dir, "final_dqn_model.h5"))
 
 print("Training complete. Model saved.")
